@@ -1,0 +1,31 @@
+---
+layout: post
+title: "Temp"
+date: 2015-01-07 00:49:38 +0800
+comments: true
+published: false
+description: "总结 感悟"
+keywords: 总结, 思考
+
+categories: 
+- 生活
+
+---
+
+local image
+{% img /images/test.jpg %}
+
+include local code file
+{% include_code lang:cpp aioCase.h %}
+
+include gist 
+{% gist 4321346 %}
+
+{% img http://placekitten.com/890/280 %}
+
+{% blockquote Douglas Adams, The Hichhikers Guide to the Galaxy %}
+Flying is learning how to throw yourself at the ground and miss.
+{% endblockquote %}
+
+{% img right http://placekitten.com/300/500 150 250 Place Kitten #3 %}
+<!--more-->

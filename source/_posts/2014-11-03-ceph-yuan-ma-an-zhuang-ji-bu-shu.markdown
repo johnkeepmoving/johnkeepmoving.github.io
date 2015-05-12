@@ -1,0 +1,268 @@
+---
+layout: post
+title: "Ceph 源码安装及部署"
+date: 2014-11-03 20:45:56 +0800
+comments: true
+description: "Ceph install"
+keywords: ceph, source, install
+
+categories: 
+- ceph
+
+---
+    
+Ceph是一个开源的分布式存储的项目, 可以提供 对象存储\文件存储(Posix兼容)\块存储 等服务. OpenStack是目前最流行的开源云计算框架, 而Ceph是OpenStack社区中呼声最高的后端统一存储. 具体请参考 [Ceph官网](http://www.ceph.com)
+    
+###ceph有两种常见的部署方法 ##
+
+Ceph官网推荐用 Ceph-deploy 进行Ceph集群的部署.
+
+- Ceph-deploy的工作方式是: 需要有一个admin-node安装Ceph-deploy, 该admin-node需要能够密码free地ssh访问Ceph node.通过在admin-node上执行Ceph-deploy的简单命令一步一步增量式地构建Ceph存储系统. 这种方式部署简单, 在各个Ceph node上安装的是Ceph的binary包(从包管理系统获得).详情请参考 http://ceph.com/docs/master/start/
+<!--more-->
+*如果需要改源码的话, 那么不推荐这种部署方式*:因为确实可以先在Ceph的各个node上先源码编译安装好, 然后从Admin-node上用Ceph-deploy构建Ceph存储系统, 但是我在实际中尝试这么做时遇到了很多很多的问题, 虽然最后也成功部署, 但远不如第2种方法省事.
+
+- 源码编译安装, 然后用mkcephfs脚本来初始化Ceph存储系统.
+  主要就是 下载源码包 -> 编译安装 -> 编写配置文件,设置分区 -> 执行mkcephfs -> 启动ceph服务.本文重点讲解第二种方法.
+
+
+博主的环境是: 
+*UnitedStack上的虚拟机: Centos6.5(64位), 8 vCpu, 32G内存, 挂载了/dev/sdb, /dev/sdc, /dev/sdd 三块100G的Volume.*
+*Ceph环境是: 1个mon, 1个mds, 3个osd, 每个osd的data 和 journal分别写到不同分区*
+
+## 源码安装及部署过程##
+
+1.下载Ceph 源码
+    
+		git clone --recursive https://github.com/ceph/ceph.git
+		cd ceph
+		git submodule update
+
+2.安装依赖
+    在ceph的根目录下, 有两个文件: deps.deb.txt 和 deps.rpm.txt, 根据你的系统执行执行下面两条命令之一即可:
+    
+		sudo yum install `cat deps.rpm.txt`
+or
+		
+		sudo apt-get install `cat deps.deb.txt`
+
+3.在Ceph的根目录执行:
+
+		./autogen.sh
+		./configure
+		make
+		make install(可选)
+ 由于Ceph make的时候非常慢, 在make的时候可以用 `make -j{CPU Core数目}`来加快编译
+
+4.把ceph作为系统服务
+
+		cp ceph/src/init-ceph /etc/init.d/ceph
+
+5.创建Ceph配置文件 ceph.conf:
+
+Ceph配置文件主要包含以下几个部分:
+
+`[global]`里是全局设置, `[mon]`里是monitor的一般性设置, `[mon.a]`里是monitor a的特殊设置,  `[osd]`里是osd的一般设置, `[osd.0]`是osd.0的特殊设置, 后面以此类推.
+    
+下面是我的ceph.conf, 谨供参考:
+
+        [global]
+        # For version 0.55 and beyond, you must explicitly enable or disable authentication with "auth" entries in [global].
+        auth cluster required = none
+        auth service required = none
+        auth client required = none
+        osd pool default size = 3
+        osd pool default min size = 1
+        osd crush update on start = 0
+        osd_pool_default_pg_num = 2048
+        osd_pool_default_pgp_num = 2048
+        osd_crush_chooseleaf_type = 0
+        ms_use_event = true
+        ms_event_op_threads = 3
+
+        debug_buffer = 0/0
+        debug_optracker = 0/0
+        debug_objclass = 0/0
+        debug_throttle = 0/0
+        debug_timer = 0/0
+        debug_lockdep = 0/0
+        debug_mds_log = 0/0
+        debug_osd = 0/0
+        debug_mds = 0/0
+        perf = True
+        debug_heartbeatmap = 0/0
+        debug_asok = 0/0
+        debug_objectcacher = 0/0
+        debug_rbd = 0/0
+        debug_paxos = 0/0
+        debug_finisher = 0/0
+        debug_client = 0/0
+        debug_mds_balancer = 0/0
+        debug_context = 0/0
+        debug_perfcounter = 0/0
+        debug_auth = 0/0
+        debug_journal = 0/0
+        debug_rados = 0/0
+        debug_crush = 0/0
+        debug_rgw = 0/0
+        mutex_perf_counter = true
+        debug_objecter = 0/0
+        debug_ms = 0/0
+        debug_mds_log_expire = 0/0
+        debug_journaler = 0/0
+        debug_filestore = 0/0
+        debug_keyvaluestore = 0/0
+        debug_mds_migrator = 0/0
+        debug_tp = 0/0
+        debug_monc = 0/0
+        debug_filer = 0/0
+        debug_hadoop = 0/0
+        debug_mds_locker = 0/0
+        debug_mon = 10/10
+
+        mon_client_hunt_interval = 30
+        [osd]
+        osd journal size = 0
+        osd objectstore = filestore
+        osd_op_threads = 3
+        osd_client_message_cap = 91280000
+        osd_client_message_size_cap = 104857600000
+        osd_mon_heartbeat_interval = 30
+        osd_heartbeat_interval = 6
+        osd_heartbeat_min_peers = 10
+        osd_heartbeat_grace = 20
+        #osd_keyvaluedb = rocksdb
+
+        keyvaluestore queue max ops = 500
+        keyvaluestore queue max bytes = 1000 << 30
+        keyvaluestore header cache size = 409600
+        keyvaluestore op threads = 10
+        keyvaluestore_max_expected_write_size = 4096
+        leveldb_write_buffer_size = 33554432
+        leveldb_cache_size = 536870912
+        leveldb_bloom_size = 0
+        leveldb_max_open_files = 10240
+        leveldb_compression = false
+        leveldb_paranoid = false
+        leveldb_log = /dev/null
+        leveldb_compact_on_mount = false
+
+        rocksdb_write_buffer_size = 33554432
+        rocksdb_cache_size = 536870912
+        rocksdb_bloom_size = 0
+        rocksdb_max_open_files = 10240
+        rocksdb_compression = false
+        rocksdb_paranoid = false
+        rocksdb_log = /dev/null
+        rocksdb_compact_on_mount = false
+
+        filestore_queue_max_ops = 5000
+        filestore_wbthrottle_xfs_bytes_start_flusher = 500000000
+        journal_max_write_entries = 500000
+        filestore_wbthrottle_xfs_indoes_start_flusher = 500
+        filestore_fd_cache_size = 204800
+        filestore_omap_header_cache_size = 204800
+        filestore_fd_cache_random = true
+        filestore_wbthrottle_xfs_inodes_hard_limit = 80000
+        filestore_wbthrottle_xfs_indoes_hard_limit = 500000
+        osd_leveldb_block_size = 65536
+        journal_queue_max_ops = 500000
+        filestore_wbthrottle_xfs_ios_start_flusher = 50000
+        osd_leveldb_bloom_size = 0
+        osd_op_thread_timeout = 60
+        ms_dispatch_throttle_bytes = 104857600000
+        filestore_wbthrottle_xfs_bytes_hard_limit = 500000000
+        osd_leveldb_compression = False
+        osd_leveldb_write_buffer_size = 33554432
+        filestore_op_threads = 4
+        filestore_max_inline_xattrs = 6
+        filestore_wbthrottle_enable = True
+        osd_leveldb_max_open_files = 0
+        journal_queue_max_bytes = 10240000000
+        osd_leveldb_cache_size = 536870912
+        filestore_queue_committing_max_ops = 50000
+        journal_max_write_bytes = 1024000000
+        filestore_queue_max_bytes = 1024000000
+        filestore_wbthrottle_xfs_ios_hard_limit = 500000
+        max_open_files = 224800
+        objecter_inflight_ops = 10240
+        filestore_fiemap = true
+        filestore_max_sync_interval = 5
+        #osd_recovery_max_active=2000,
+        #osd_recovery_max_single_start=300,
+        #osd_recovery_max_chunk=33554432",
+        osd mkfs type = xfs
+        osd_pg_object_context_cache_count = 1024
+        osd_op_num_shards = 5
+        osd_op_num_threads_per_shard = 2
+
+        #osd_scrub_min_interval = 10
+        #osd_scrub_max_interval = 10
+        #osd_deep_scrub_interval = 10
+
+        [mon]
+            mon data = /var/ceph_data/$name 
+
+        [mon.0]
+            host = ceph
+            mon addr = 10.250.11.174:6789
+
+        [osd]
+            osd data = /var/ceph_data/$name
+            host = ceph 
+
+        [osd.0]
+            osd journal = /dev/vdb1
+            devs = /dev/vdb2 
+
+        [osd.1]
+            osd journal = /dev/vdc1
+            devs = /dev/vdc2 
+
+        [osd.2]
+            osd journal = /dev/vdd1
+            devs = /dev/vdd2 
+
+        [mds]
+            host = ceph 
+        [mds.a]
+
+*注意: 上面提到的data相关的路径都是需要手动创建的*
+
+6.磁盘分区
+
+以/dev/vdb为例, 小容量的将来存OSD的journal, 大容量的将来存OSD的Data 
+    
+		parted -a optimal -s /dev/vdb mktable gpt
+		parted -a optimal -s /dev/vdb mkpart ceph 0% 20GB
+		parted -a optimal -s /dev/vdb mkpart ceph 20GB 100%
+
+7.磁盘挂载 
+    
+将三块大的分区分别挂载到三个osd的data路径, 
+		
+		mount /dev/vdb2 /var/ceph_data/osd.0
+		mount /dev/vdc2 /var/ceph_data/osd.1
+		mount /dev/vdd2 /var/ceph_data/osd.2
+
+8.mkcephfs
+
+mkcephfs是稍微有点老的工具, 在ceph-0.80及之前的版本中存在与src/目录下, 以后每当ceph配置文件变化时, 都在src/下执行, 
+    
+		./mkcephfs -a -c /etc/ceph/ceph.conf -k /etc/ceph/ceph.keyring
+    
+成功的话就完成了初始化工作
+
+9.启动ceph服务
+    
+		/etc/init.d/ceph -c /etc/ceph/ceph.conf -a start
+ 如果报错:
+
+		/etc/init.d/ceph: line 15: /lib/lsb/init-functions: No such file or directory
+就在mon结点上
+
+		yum install redhat-lsb
+
+10.ceph服务启动完成后, 
+
+		./ceph/src/ceph -s
+如果显示`HEALTH_OK`, 则表示ceph存储系统成功创建.

@@ -1,0 +1,36 @@
+---
+layout: post
+title: "利用shadowsocks搭建个人vpn"
+date: 2015-02-06 23:07:53 +0800
+comments: true
+description: "shadowsocks vpn"
+keywords: shadowsocks vpn vps
+categories: 
+- tool/Linux
+---
+之前一直在用123ssh的vpn, 最近发现他们的服务器不太稳定, Linux下还能连上服务器, windows下直接连接不上.
+
+听王师兄说, 他自己在国外的云平台买了个VPS, 自己搞个基于Shadowsocks的VPN, 我查了查, 今天自己也搞了一台. 下面就记录下, 防止自己忘了.
+<!--more-->
+#shadowsocks和vpn
+shadowsocks 是一个基于socks5协议的代理服务器.
+利用shadowsocks搭建VPN的原理就是:
+- 本地浏览器将http请求发送到本地shadowsocks (sslocal进程会监听本地端口)
+- sslocal进程将http请求转发给远端的shadowsocks(sssever)
+- ssserver向internet请求该http请求
+- 请求的数据再依次转发到浏览器
+
+翻墙的原理就是: 找一个美国的服务器! 可以直接在ramnode上买vps或者AWS上买个ec2都行, 重点该虚拟机访问外国网站不会被qiang.
+
+好, 下面是详细步骤:
+
+1. 搞定虚拟机.
+   一定要国外的服务器, 不然怎么fan..我就是在RamNode上买了个最低配的vps.一年流量500G, 才不到100.是不是超值?
+2. 安装shadowsocks
+   本地和服务器都要装, 由于我的笔记本和服务器都是debian 7 64bit, 下面是我的安装过程:
+   我们安装的是shadowsocks python 客户端, 而pip是安装和管理python包的工具, 所以需要先安装Pip.
+   apt-get install python-gevent python-pip
+   pip install shadowsocks
+3. 配置
+   shadowsocks的配置很简单, 在/etc/shadowsocks目录下创建 config.json.
+/etc/shadowsocks/config.json
