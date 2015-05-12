@@ -105,7 +105,7 @@ google_analytics_tracking_id: UA-58116642-1
 # Please refer to http://weibo.com/tool/weiboshow to get your uid and verifier. 
 weibo_uid: 2005880957 
 weibo_verifier: 6aac0f18 
-weibo_fansline: 0   # 粉丝显示多少行
+weibo_fansline: 2   # 粉丝显示多少行
 weibo_show: true    # 是否显示最近微博内容
 weibo_pic: true     # 是否显示微博中的图片
 weibo_skin: 10      # 使用哪种配色风格，数字为从1开始的微博秀风格序号
