@@ -4,7 +4,7 @@
   <title><![CDATA[John's Blog]]></title>
   <link href="http://johnkeepmoving.com/atom.xml" rel="self"/>
   <link href="http://johnkeepmoving.com/"/>
-  <updated>2017-05-13T23:14:27+08:00</updated>
+  <updated>2017-05-13T23:56:48+08:00</updated>
   <id>http://johnkeepmoving.com/</id>
   <author>
     <name><![CDATA[Heng Jiang]]></name>
@@ -12,25 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[this is title]]></title>
-    <link href="http://johnkeepmoving.com/blog/2017/05/13/this-is-title/"/>
-    <updated>2017-05-13T23:02:09+08:00</updated>
-    <id>http://johnkeepmoving.com/blog/2017/05/13/this-is-title</id>
-    <content type="html"><![CDATA[<p>this is test content.</p>
-
-<!--more-->
-
-
-<p>this is more detail content.</p>
-
-<p>Finish</p>
-
-<p class='post-footer'>original link:<a href='http://johnkeepmoving.com/blog/2017/05/13/this-is-title/'>http://johnkeepmoving.com/blog/2017/05/13/this-is-title/</a><br/>&nbsp;written by <a href='http://johnkeepmoving.com'>Heng Jiang</a>&nbsp;posted at <a href='http://johnkeepmoving.com'>http://johnkeepmoving.com</a></p>
-
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[新环境]]></title>
