@@ -270,7 +270,7 @@ multitask :push do
     #sync to gitcafe
     #system "git remote add gitcafe git@gitcafe.com:johnkeepmoving/johnkeepmoving.git >> /dev/null 2>&1"
     system "git remote add coding git@git.coding.net:johnkeepmoving/johnkeepmoving.git >> /dev/null 2>&1" 
-    system "git push -u gitcafe master:gitcafe-pages"
+    system "git push -u coding master:gitcafe-pages"
     #sync to gitcafe finished 
   end
 end
