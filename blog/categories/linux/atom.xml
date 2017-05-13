@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: linux | John's Blog]]></title>
+  <link href="http://johnkeepmoving.com/blog/categories/linux/atom.xml" rel="self"/>
+  <link href="http://johnkeepmoving.com/"/>
+  <updated>2017-05-13T23:14:27+08:00</updated>
+  <id>http://johnkeepmoving.com/</id>
+  <author>
+    <name><![CDATA[Heng Jiang]]></name>
+    <email><![CDATA[jiangheng0511@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Unix domain socket]]></title>
+    <link href="http://johnkeepmoving.com/blog/2015/03/21/unix-domain-socket/"/>
+    <updated>2015-03-21T16:39:15+08:00</updated>
+    <id>http://johnkeepmoving.com/blog/2015/03/21/unix-domain-socket</id>
+    <content type="html"><![CDATA[<p>这天因为项目需要, 接触到了Unix domain socket, 主要是用于本地进程之间进行通信的, 很方便.而且性能比本地IP socket通信要好, 主要是没有了协议栈的处理.</p>
+
+<p>原理就是在本地文件系统创建各自的socket文件(程序中会自动创建), 然后就可以用ip socket的相关函数来操作.</p>
+
+<p>下面是Server代码:</p>
+
+<!--more-->
+
+
+<p><figure class='code'><figcaption><span> (unix_socket_server.c)</span> <a href='/code/unix_socket_server.c'>download</a></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;unistd.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;stdlib.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;errno.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;string.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;sys/types.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;sys/socket.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;sys/un.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">char</span> <span class="o">*</span> <span class="n">server_filename</span> <span class="o">=</span> <span class="s">&quot;/tmp/socket-server&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">s</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">struct</span> <span class="n">sockaddr_un</span> <span class="n">srv_un</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="p">((</span><span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="p">(</span><span class="n">AF_UNIX</span><span class="p">,</span> <span class="n">SOCK_DGRAM</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">perror</span><span class="p">(</span><span class="s">&quot;socket server&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">srv_un</span><span class="p">.</span><span class="n">sun_family</span> <span class="o">=</span> <span class="n">AF_UNIX</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">strncpy</span><span class="p">(</span><span class="n">srv_un</span><span class="p">.</span><span class="n">sun_path</span><span class="p">,</span> <span class="n">server_filename</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">srv_un</span><span class="p">.</span><span class="n">sun_path</span><span class="p">));</span>
+</span><span class='line'>    <span class="cm">/*If you leave the file behind when you&#39;re finished, or perhaps crash after binding, the next bind will fail</span>
+</span><span class='line'><span class="cm">     *     / with &quot;address in use&quot;. Which just means, the file is already there.*/</span>
+</span><span class='line'>    <span class="n">unlink</span><span class="p">(</span><span class="n">srv_un</span><span class="p">.</span><span class="n">sun_path</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">bind</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="p">(</span><span class="k">struct</span> <span class="n">sockaddr</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">srv_un</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">srv_un</span><span class="p">))</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">perror</span><span class="p">(</span><span class="s">&quot;bind server&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="kt">socklen_t</span> <span class="n">addre_len</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">struct</span> <span class="n">sockaddr_un</span> <span class="n">remote_un</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">ret</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">1024</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+</span><span class='line'>    <span class="k">for</span><span class="p">(;;)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">memset</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">buf</span><span class="p">));</span>
+</span><span class='line'>        <span class="c1">//read(s, buf, sizeof(buf));</span>
+</span><span class='line'>        <span class="n">ret</span> <span class="o">=</span> <span class="n">recvfrom</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">buf</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>                <span class="p">(</span><span class="k">struct</span> <span class="n">sockaddr</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">remote_un</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">addre_len</span><span class="p">);</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">ret</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">perror</span><span class="p">(</span><span class="s">&quot;error when recvfrom, &quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;RECEIVED: %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">buf</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">sprintf</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="s">&quot;Got it!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">ret</span> <span class="o">=</span> <span class="n">sendto</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">buf</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>                <span class="p">(</span><span class="k">struct</span> <span class="n">sockaddr</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">remote_un</span><span class="p">,</span> <span class="n">addre_len</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">usleep</span><span class="p">(</span><span class="mi">50000</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">close</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p>下面是Client代码:</p>
+
+<p><figure class='code'><figcaption><span> (unix_socket_client.c)</span> <a href='/code/unix_socket_client.c'>download</a></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;stdlib.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;errno.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;string.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;sys/types.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;sys/socket.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;sys/un.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">char</span> <span class="o">*</span> <span class="n">server_filename</span> <span class="o">=</span> <span class="s">&quot;/tmp/socket-server&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="kt">char</span> <span class="o">*</span> <span class="n">client_filename</span> <span class="o">=</span> <span class="s">&quot;/tmp/socket-client&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">s</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">char</span> <span class="n">obuf</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>
+</span><span class='line'>    <span class="k">struct</span> <span class="n">sockaddr_un</span> <span class="n">srv_un</span><span class="p">,</span> <span class="n">cli_un</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">srv_un</span><span class="p">.</span><span class="n">sun_family</span> <span class="o">=</span> <span class="n">AF_UNIX</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">strncpy</span><span class="p">(</span><span class="n">srv_un</span><span class="p">.</span><span class="n">sun_path</span><span class="p">,</span> <span class="n">server_filename</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">srv_un</span><span class="p">.</span><span class="n">sun_path</span><span class="p">));</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">cli_un</span><span class="p">.</span><span class="n">sun_family</span> <span class="o">=</span> <span class="n">AF_UNIX</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">strncpy</span><span class="p">(</span><span class="n">cli_un</span><span class="p">.</span><span class="n">sun_path</span><span class="p">,</span> <span class="n">client_filename</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">cli_un</span><span class="p">.</span><span class="n">sun_path</span><span class="p">));</span>
+</span><span class='line'>    <span class="n">unlink</span><span class="p">(</span><span class="n">cli_un</span><span class="p">.</span><span class="n">sun_path</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="p">((</span><span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="p">(</span><span class="n">AF_UNIX</span><span class="p">,</span> <span class="n">SOCK_DGRAM</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">perror</span><span class="p">(</span><span class="s">&quot;socket server&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">bind</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="p">(</span><span class="k">struct</span> <span class="n">sockaddr</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">cli_un</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">cli_un</span><span class="p">))</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">perror</span><span class="p">(</span><span class="s">&quot;bind client&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/*</span>
+</span><span class='line'><span class="cm">    if (connect(s, (struct sockaddr *) &amp;srv_un, sizeof(srv_un)) == -1) {</span>
+</span><span class='line'><span class="cm">        perror(&quot;connect client&quot;);</span>
+</span><span class='line'><span class="cm">        exit(1);</span>
+</span><span class='line'><span class="cm">    }</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">    printf(&quot;Connected.\n&quot;);</span>
+</span><span class='line'><span class="cm">    while(printf(&quot;&gt; &quot;), fgets(obuf, 100, stdin), !feof(stdin)) {</span>
+</span><span class='line'><span class="cm">        if (send(s, obuf, strlen(obuf), 0) == -1) {</span>
+</span><span class='line'><span class="cm">            perror(&quot;send&quot;);</span>
+</span><span class='line'><span class="cm">            exit(1);</span>
+</span><span class='line'><span class="cm">        }</span>
+</span><span class='line'><span class="cm">        break;</span>
+</span><span class='line'><span class="cm">    }</span>
+</span><span class='line'><span class="cm">*/</span>
+</span><span class='line'>    <span class="n">sprintf</span><span class="p">(</span><span class="n">obuf</span><span class="p">,</span> <span class="s">&quot;test string&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">usleep</span><span class="p">(</span><span class="mi">5000</span><span class="p">);</span> <span class="c1">//5ms</span>
+</span><span class='line'>        <span class="c1">//if (send(s, obuf, strlen(obuf), 0) == -1) {</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">sendto</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">obuf</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">obuf</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>                 <span class="p">(</span><span class="k">struct</span> <span class="n">sockaddr</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">srv_un</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">srv_un</span><span class="p">))</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">perror</span><span class="p">(</span><span class="s">&quot;send&quot;</span><span class="p">);</span>
+</span><span class='line'>            <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;send to server %d bytes</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">obuf</span><span class="p">));</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">1024</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+</span><span class='line'>        <span class="n">read</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">buf</span><span class="p">));</span>
+</span><span class='line'>        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;received: %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">buf</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Sent successfully.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">close</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p>在Client端, 可以选择connect, 然后用send和recv收发数据, 也可以不connect, 用sendto 和 recvfrom收发数据, 这应该通IP socket是一样的.</p>
+
+<p>需要注意的是, 由于用的是sockaddr_un结构, 而不是ip的sockaddr_in结构, 所有socket通信时跟IP地址和端口没有任何关系</p>
+
+<p>运行时的系统截图:</p>
+
+<p><img src="/images/unix_domain_socket.png"></p>
+
+<p>虽然这个例子中是SOCK_DGRAM, 但是, 当发送方发送过快, 接收方来不及收时, 发送放的sendto会自动阻塞, 直到接收方缓冲区有空时, 发送方再继续发.我想这就是为什么无论是stream 还是 dgram, unix domain socket总是可靠的原因吧(可同udp对比查看差异).</p>
+
+<p>Finish</p>
+]]></content>
+  </entry>
+  
+</feed>

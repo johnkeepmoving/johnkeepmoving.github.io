@@ -1,0 +1,1036 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[John's Blog]]></title>
+  <link href="http://johnkeepmoving.com/atom.xml" rel="self"/>
+  <link href="http://johnkeepmoving.com/"/>
+  <updated>2017-05-13T23:14:27+08:00</updated>
+  <id>http://johnkeepmoving.com/</id>
+  <author>
+    <name><![CDATA[Heng Jiang]]></name>
+    <email><![CDATA[jiangheng0511@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[this is title]]></title>
+    <link href="http://johnkeepmoving.com/blog/2017/05/13/this-is-title/"/>
+    <updated>2017-05-13T23:02:09+08:00</updated>
+    <id>http://johnkeepmoving.com/blog/2017/05/13/this-is-title</id>
+    <content type="html"><![CDATA[<p>this is test content.</p>
+
+<!--more-->
+
+
+<p>this is more detail content.</p>
+
+<p>Finish</p>
+
+<p class='post-footer'>original link:<a href='http://johnkeepmoving.com/blog/2017/05/13/this-is-title/'>http://johnkeepmoving.com/blog/2017/05/13/this-is-title/</a><br/>&nbsp;written by <a href='http://johnkeepmoving.com'>Heng Jiang</a>&nbsp;posted at <a href='http://johnkeepmoving.com'>http://johnkeepmoving.com</a></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[新环境]]></title>
+    <link href="http://johnkeepmoving.com/blog/2015/09/05/xin-huan-jing/"/>
+    <updated>2015-09-05T15:33:13+08:00</updated>
+    <id>http://johnkeepmoving.com/blog/2015/09/05/xin-huan-jing</id>
+    <content type="html"><![CDATA[<p>不知不觉，入职已经1个半月了，工作也慢慢步入正轨。
+之前卧室里一直缺一个桌子，每天晚上回家后都只能在床上看电脑，很不舒服，正好这两天放假，决心去宜家逛逛。</p>
+
+<!--more-->
+
+
+<p>我发现人都是有购物欲的，我一个大男人，看到宜家的各种东西，不管用不用的到，都忍不住想买。
+最后，买了必须的三大件，桌子、台灯和转椅。临走时看到一个木头关节人，就又顺手带上了。</p>
+
+<p>上效果图，希望自己每天晚上回来能够静下心来，总结一天的工作，同时明确第二天的工作计划.</p>
+
+<p><img src="http://johnkeepmoving.com/images/desktop.jpg"></p>
+
+<p class='post-footer'>original link:<a href='http://johnkeepmoving.com/blog/2015/09/05/xin-huan-jing/'>http://johnkeepmoving.com/blog/2015/09/05/xin-huan-jing/</a><br/>&nbsp;written by <a href='http://johnkeepmoving.com'>Heng Jiang</a>&nbsp;posted at <a href='http://johnkeepmoving.com'>http://johnkeepmoving.com</a></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[vim recording]]></title>
+    <link href="http://johnkeepmoving.com/blog/2015/06/29/vim-recording/"/>
+    <updated>2015-06-29T22:04:48+08:00</updated>
+    <id>http://johnkeepmoving.com/blog/2015/06/29/vim-recording</id>
+    <content type="html"><![CDATA[<p>vim在Normal模式下有recording(录制)的功能,即可以录制一系列操作并回放, 该功能对于一些需要重复操作的场景很有效.</p>
+
+<p>recording功能使用方法如下:</p>
+
+<pre><code>1.在Normal模式下, 按下`qa`, 即start recording, 并将操作序列存与寄存器a中, 此处可以为`qb`, `qc`等.
+2.输入相关操作序列
+3.输入`q`结束recording.
+4.`@a`回放寄存器a中的操作
+</code></pre>
+
+<!--more-->
+
+
+<p>下面以一个例子来具体说明.
+文件test中只有一行字符串如下:</p>
+
+<pre><code>1
+</code></pre>
+
+<p>指令序列<code>qaYp&lt;C-a&gt;q</code>可以存储这样一个操作, 将当前行的数字拷贝到下一行, 并在新行中增加1</p>
+
+<pre><code>1.`qa`开始录制
+2.`Yp`复制当前行并粘贴, 同时光标移动到下一行
+3.`&lt;C-a&gt;`将该行的数字增加1
+4.`q`停止录制
+</code></pre>
+
+<p>当输入上面的一串指令后, <code>@a</code>会回放寄存器a的操作, <code>@@</code>会回放上一次回放,为了多次回放, 可以在@前加入数字来指定回放次数</p>
+
+<p>现在我们在Normal模式下继续输入<code>10@a</code>, 文本变成如下:</p>
+
+<pre><code> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+</code></pre>
+
+<p>最终生成一个递增序列</p>
+
+<p>如果我们希望等差数列的间隔为2, 则可以输入<code>qbYp&lt;C-a&gt;&lt;C-a&gt;q</code>, 然后输入<code>10@b</code>回放</p>
+
+<pre><code> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+ 11
+ 13
+ 15
+ 17
+ 19
+ 21
+ 23
+ 25
+ 27
+ 29
+ 31
+</code></pre>
+
+<p class='post-footer'>original link:<a href='http://johnkeepmoving.com/blog/2015/06/29/vim-recording/'>http://johnkeepmoving.com/blog/2015/06/29/vim-recording/</a><br/>&nbsp;written by <a href='http://johnkeepmoving.com'>Heng Jiang</a>&nbsp;posted at <a href='http://johnkeepmoving.com'>http://johnkeepmoving.com</a></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[硕士答辩当天]]></title>
+    <link href="http://johnkeepmoving.com/blog/2015/05/30/shuo-shi-da-bian-dang-tian/"/>
+    <updated>2015-05-30T12:42:56+08:00</updated>
+    <id>http://johnkeepmoving.com/blog/2015/05/30/shuo-shi-da-bian-dang-tian</id>
+    <content type="html"><![CDATA[<p>今天上午要毕业答辩, 昨天晚上12点多还在准备PPT, 做了50多页的PPT,担心20分钟的时间讲不完哪.
+早上6点半就爬起来了,跑到所里布置完答辩会场后已经没有了食欲, 还好我是上午第3个, 不用等太久.</p>
+
+<!--more-->
+
+
+<p>快轮到我讲时,出了意外, 答辩横幅突然脱落了, 我们几个同学又手忙脚乱地重新挂好.</p>
+
+<p>我都准备开始讲了, 答辩主席却和其他老师聊起了硕士生转博的问题, 貌似感悟很多, 说老师应该多和硕士生沟通,辅助硕士生作出选择, 但也不能强迫,毕竟强扭的瓜不甜, 说的时候还时不时瞅我一眼. 我就在那干站着, 冲着主席一个劲儿点头&hellip;直到其他老师都不吱声了, 主席才示意我开始讲.</p>
+
+<p>开始讲后, 发现基本没老师看我的PPT啊, 于是我精简了很多内容, 本来25分钟都讲不完的内容, 愣是在19分钟就讲完了.随后的提问环节, 也算是有惊无险吧.</p>
+
+<p>答辩完后, 由于之前材料已经准备得差不多了, 该签字的已经签过字了, 所以下午很快就整理好了材料,网上该填的东西也都填完了, 速度把档案袋交给研究生部, 总算完事了&hellip;</p>
+
+<p>晚上去了健身房, 感觉力量还是差得有点远啊, 以后没事了必须得多去了, 不然白花花的银子都打水漂了&hellip;</p>
+
+<p>临回宿舍前, 突然想起明天旁边的研0师妹就要回本科学校了, 等她回来时我早就毕业去杭州了, 下一次见面不知又是什么时候. 唉,之前遇到到的很多人, 也许以后再也不会相见了吧.</p>
+
+<p>回宿舍后, 心情出奇的平静.换了换床单,被罩, 洗衣服, 打扫卫生, 不知不觉就12点多了.</p>
+
+<p>忙活了一天, 终于能睡个好觉了. 明天又将是全新的一天!</p>
+
+<p><img src="http://johnkeepmoving.com/images/toyoung.jpg"></p>
+
+<p>Finish</p>
+
+<p class='post-footer'>original link:<a href='http://johnkeepmoving.com/blog/2015/05/30/shuo-shi-da-bian-dang-tian/'>http://johnkeepmoving.com/blog/2015/05/30/shuo-shi-da-bian-dang-tian/</a><br/>&nbsp;written by <a href='http://johnkeepmoving.com'>Heng Jiang</a>&nbsp;posted at <a href='http://johnkeepmoving.com'>http://johnkeepmoving.com</a></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[博客域名风波]]></title>
+    <link href="http://johnkeepmoving.com/blog/2015/05/13/bo-ke-yu-ming-feng-bo/"/>
+    <updated>2015-05-13T22:49:40+08:00</updated>
+    <id>http://johnkeepmoving.com/blog/2015/05/13/bo-ke-yu-ming-feng-bo</id>
+    <content type="html"><![CDATA[<p>我的博客是基于Octopress搭建的,但是由于一开始不太明白怎么弄,把本地Octopress目录弄得很乱,看着不爽(强迫症&hellip;),于是乎前天想重新搭建一遍.</p>
+
+<p>参考<a href="http://beyondvincent.com/2013/08/03/2013-08-03-108-creating-a-github-blog-using-octopress/">破船大哥</a>的博客,很快就将Octopress部署到了github上(Octopress源码+生成的blog), 这次使用的是bootstrap主题,并且增加了如下功能:</p>
+
+<pre><code>    1.右下角的revolvermaps, 实时显示访问情况.(不好看,也许回头会去掉)
+    2.右侧的微薄show, 纯粹好奇玩玩.
+    3.快速返回顶部的按钮
+</code></pre>
+
+<p>随后, 因为国内线路访问github实在有点慢,而国内良心厂家gitcafe也可以提供类似与github一样的pages服务,所以参考<a href="http://blog.devtang.com/blog/2014/06/02/use-gitcafe-to-host-blog/">唐巧的博客</a>,又将生成的blog也push到了gitcafe一份.</p>
+
+<p>然后, 在配置DNS解析的时候(其实压根就不需要改动), 由于我购买了二级域名johnkeepmoving.com, 所以我将二级域名johnkeepmoving.com, 以及子域名www.johnkeepmoving.com和blog.johnkeepmoving.com都一起指向了gitcafe的服务器.</p>
+
+<p>问题来了, 我发现2个子域名可以正常访问, 而二级域名也可以正常解析(能ping通), 但是http请求会返回404错误. 我一直以为是我gitcafe里page服务的某些配置可能有问题, 所以就不断检查, 可检查得出的结论是跟我之前博客的域名解析一模一样啊.之前(2015过年前)一直都是可以所有域名都正常访问的.</p>
+
+<!--more-->
+
+
+<p>悲催的我终于脑门开窍, google了关键词&#8221;gitcafe 二级域名失效&#8221;.结果发现人家<a href="http://blog.gitcafe.com/?p=478">gitcafe已经关闭了.com二级域名的访问</a>, 而且刚好是最近才停止的.汗,怪不得可以ping通,但却显示404错误.</p>
+
+<p>解决办法:
+    既然gitcafe关闭了.com二级的访问, 那就把二级域名解析到github上就好了,子域名www和blog依然解析到gitcafe.
+最后的域名解析方法:</p>
+
+<pre><code>主机记录    记录类型    记录值
+@           A           199.27.74.133(github地址)
+blog        CNAME       johnkeepmoving.gitcafe.io
+www         CNAME       johnkeepmoving.gitcafe.io
+</code></pre>
+
+<p><strong>最后总结,</strong></p>
+
+<pre><code>url:                    博客代码所在位置:
+johnkeepmoving.com      github
+www.johnkeepmoving.com      gitcafe
+blog.johnkeepmoving.com     gitcafe
+</code></pre>
+
+<p>目前只是硬性对域名进行解析, 将来如果有条件, 可以考虑针对用户的不同链路类型, 配置不同的DNS解析, 最终提升用户体验.</p>
+
+<p>Finish</p>
+
+<p class='post-footer'>original link:<a href='http://johnkeepmoving.com/blog/2015/05/13/bo-ke-yu-ming-feng-bo/'>http://johnkeepmoving.com/blog/2015/05/13/bo-ke-yu-ming-feng-bo/</a><br/>&nbsp;written by <a href='http://johnkeepmoving.com'>Heng Jiang</a>&nbsp;posted at <a href='http://johnkeepmoving.com'>http://johnkeepmoving.com</a></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Unix domain socket]]></title>
+    <link href="http://johnkeepmoving.com/blog/2015/03/21/unix-domain-socket/"/>
+    <updated>2015-03-21T16:39:15+08:00</updated>
+    <id>http://johnkeepmoving.com/blog/2015/03/21/unix-domain-socket</id>
+    <content type="html"><![CDATA[<p>这天因为项目需要, 接触到了Unix domain socket, 主要是用于本地进程之间进行通信的, 很方便.而且性能比本地IP socket通信要好, 主要是没有了协议栈的处理.</p>
+
+<p>原理就是在本地文件系统创建各自的socket文件(程序中会自动创建), 然后就可以用ip socket的相关函数来操作.</p>
+
+<p>下面是Server代码:</p>
+
+<!--more-->
+
+
+
+
+<figure class='code'><figcaption><span> (unix_socket_server.c)</span> <a href='http://johnkeepmoving.com/code/unix_socket_server.c'>download</a></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;unistd.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;stdlib.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;errno.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;string.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;sys/types.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;sys/socket.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;sys/un.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">char</span> <span class="o">*</span> <span class="n">server_filename</span> <span class="o">=</span> <span class="s">&quot;/tmp/socket-server&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">s</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">struct</span> <span class="n">sockaddr_un</span> <span class="n">srv_un</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="p">((</span><span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="p">(</span><span class="n">AF_UNIX</span><span class="p">,</span> <span class="n">SOCK_DGRAM</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">perror</span><span class="p">(</span><span class="s">&quot;socket server&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">srv_un</span><span class="p">.</span><span class="n">sun_family</span> <span class="o">=</span> <span class="n">AF_UNIX</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">strncpy</span><span class="p">(</span><span class="n">srv_un</span><span class="p">.</span><span class="n">sun_path</span><span class="p">,</span> <span class="n">server_filename</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">srv_un</span><span class="p">.</span><span class="n">sun_path</span><span class="p">));</span>
+</span><span class='line'>    <span class="cm">/*If you leave the file behind when you&#39;re finished, or perhaps crash after binding, the next bind will fail</span>
+</span><span class='line'><span class="cm">     *     / with &quot;address in use&quot;. Which just means, the file is already there.*/</span>
+</span><span class='line'>    <span class="n">unlink</span><span class="p">(</span><span class="n">srv_un</span><span class="p">.</span><span class="n">sun_path</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">bind</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="p">(</span><span class="k">struct</span> <span class="n">sockaddr</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">srv_un</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">srv_un</span><span class="p">))</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">perror</span><span class="p">(</span><span class="s">&quot;bind server&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="kt">socklen_t</span> <span class="n">addre_len</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">struct</span> <span class="n">sockaddr_un</span> <span class="n">remote_un</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">ret</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">1024</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+</span><span class='line'>    <span class="k">for</span><span class="p">(;;)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">memset</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">buf</span><span class="p">));</span>
+</span><span class='line'>        <span class="c1">//read(s, buf, sizeof(buf));</span>
+</span><span class='line'>        <span class="n">ret</span> <span class="o">=</span> <span class="n">recvfrom</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">buf</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>                <span class="p">(</span><span class="k">struct</span> <span class="n">sockaddr</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">remote_un</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">addre_len</span><span class="p">);</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">ret</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">perror</span><span class="p">(</span><span class="s">&quot;error when recvfrom, &quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;RECEIVED: %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">buf</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">sprintf</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="s">&quot;Got it!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">ret</span> <span class="o">=</span> <span class="n">sendto</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">buf</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>                <span class="p">(</span><span class="k">struct</span> <span class="n">sockaddr</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">remote_un</span><span class="p">,</span> <span class="n">addre_len</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">usleep</span><span class="p">(</span><span class="mi">50000</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">close</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>下面是Client代码:</p>
+
+<figure class='code'><figcaption><span> (unix_socket_client.c)</span> <a href='http://johnkeepmoving.com/code/unix_socket_client.c'>download</a></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;stdlib.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;errno.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;string.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;sys/types.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;sys/socket.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;sys/un.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">char</span> <span class="o">*</span> <span class="n">server_filename</span> <span class="o">=</span> <span class="s">&quot;/tmp/socket-server&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="kt">char</span> <span class="o">*</span> <span class="n">client_filename</span> <span class="o">=</span> <span class="s">&quot;/tmp/socket-client&quot;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">s</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">char</span> <span class="n">obuf</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>
+</span><span class='line'>    <span class="k">struct</span> <span class="n">sockaddr_un</span> <span class="n">srv_un</span><span class="p">,</span> <span class="n">cli_un</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">srv_un</span><span class="p">.</span><span class="n">sun_family</span> <span class="o">=</span> <span class="n">AF_UNIX</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">strncpy</span><span class="p">(</span><span class="n">srv_un</span><span class="p">.</span><span class="n">sun_path</span><span class="p">,</span> <span class="n">server_filename</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">srv_un</span><span class="p">.</span><span class="n">sun_path</span><span class="p">));</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">cli_un</span><span class="p">.</span><span class="n">sun_family</span> <span class="o">=</span> <span class="n">AF_UNIX</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">strncpy</span><span class="p">(</span><span class="n">cli_un</span><span class="p">.</span><span class="n">sun_path</span><span class="p">,</span> <span class="n">client_filename</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">cli_un</span><span class="p">.</span><span class="n">sun_path</span><span class="p">));</span>
+</span><span class='line'>    <span class="n">unlink</span><span class="p">(</span><span class="n">cli_un</span><span class="p">.</span><span class="n">sun_path</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="p">((</span><span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="p">(</span><span class="n">AF_UNIX</span><span class="p">,</span> <span class="n">SOCK_DGRAM</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">perror</span><span class="p">(</span><span class="s">&quot;socket server&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">bind</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="p">(</span><span class="k">struct</span> <span class="n">sockaddr</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">cli_un</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">cli_un</span><span class="p">))</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">perror</span><span class="p">(</span><span class="s">&quot;bind client&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/*</span>
+</span><span class='line'><span class="cm">    if (connect(s, (struct sockaddr *) &amp;srv_un, sizeof(srv_un)) == -1) {</span>
+</span><span class='line'><span class="cm">        perror(&quot;connect client&quot;);</span>
+</span><span class='line'><span class="cm">        exit(1);</span>
+</span><span class='line'><span class="cm">    }</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">    printf(&quot;Connected.\n&quot;);</span>
+</span><span class='line'><span class="cm">    while(printf(&quot;&gt; &quot;), fgets(obuf, 100, stdin), !feof(stdin)) {</span>
+</span><span class='line'><span class="cm">        if (send(s, obuf, strlen(obuf), 0) == -1) {</span>
+</span><span class='line'><span class="cm">            perror(&quot;send&quot;);</span>
+</span><span class='line'><span class="cm">            exit(1);</span>
+</span><span class='line'><span class="cm">        }</span>
+</span><span class='line'><span class="cm">        break;</span>
+</span><span class='line'><span class="cm">    }</span>
+</span><span class='line'><span class="cm">*/</span>
+</span><span class='line'>    <span class="n">sprintf</span><span class="p">(</span><span class="n">obuf</span><span class="p">,</span> <span class="s">&quot;test string&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">usleep</span><span class="p">(</span><span class="mi">5000</span><span class="p">);</span> <span class="c1">//5ms</span>
+</span><span class='line'>        <span class="c1">//if (send(s, obuf, strlen(obuf), 0) == -1) {</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">sendto</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">obuf</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">obuf</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>                 <span class="p">(</span><span class="k">struct</span> <span class="n">sockaddr</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">srv_un</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">srv_un</span><span class="p">))</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">perror</span><span class="p">(</span><span class="s">&quot;send&quot;</span><span class="p">);</span>
+</span><span class='line'>            <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;send to server %d bytes</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">obuf</span><span class="p">));</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">1024</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+</span><span class='line'>        <span class="n">read</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">buf</span><span class="p">));</span>
+</span><span class='line'>        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;received: %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">buf</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Sent successfully.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">close</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在Client端, 可以选择connect, 然后用send和recv收发数据, 也可以不connect, 用sendto 和 recvfrom收发数据, 这应该通IP socket是一样的.</p>
+
+<p>需要注意的是, 由于用的是sockaddr_un结构, 而不是ip的sockaddr_in结构, 所有socket通信时跟IP地址和端口没有任何关系</p>
+
+<p>运行时的系统截图:</p>
+
+<p><img src="http://johnkeepmoving.com/images/unix_domain_socket.png"></p>
+
+<p>虽然这个例子中是SOCK_DGRAM, 但是, 当发送方发送过快, 接收方来不及收时, 发送放的sendto会自动阻塞, 直到接收方缓冲区有空时, 发送方再继续发.我想这就是为什么无论是stream 还是 dgram, unix domain socket总是可靠的原因吧(可同udp对比查看差异).</p>
+
+<p>Finish</p>
+
+<p class='post-footer'>original link:<a href='http://johnkeepmoving.com/blog/2015/03/21/unix-domain-socket/'>http://johnkeepmoving.com/blog/2015/03/21/unix-domain-socket/</a><br/>&nbsp;written by <a href='http://johnkeepmoving.com'>Heng Jiang</a>&nbsp;posted at <a href='http://johnkeepmoving.com'>http://johnkeepmoving.com</a></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[过年]]></title>
+    <link href="http://johnkeepmoving.com/blog/2015/03/15/guo-nian/"/>
+    <updated>2015-03-15T23:55:13+08:00</updated>
+    <id>http://johnkeepmoving.com/blog/2015/03/15/guo-nian</id>
+    <content type="html"><![CDATA[<p>今年是我近几年过年时在家呆的最久的一次了, 差不多有3个星期吧, 工作后肯定呆不了那么久了.</p>
+
+<p>有几个高中同学结婚了, 其中就有我高中的同位海乐, 顿时感到我们这一帮人的结婚大潮要来临了&hellip;.</p>
+
+<p>去参加了海乐的婚礼, 为此还特地将返程票推迟了2天. 衷心祝他们幸福~发现今年回去大家都好像成熟了好多, 一个个都上皮鞋了, 只有我依然是一股稚嫩的学生气.</p>
+
+<!--more-->
+
+
+<p>去看了大哥刚买的房子, 由于离我们家很近, 几个人就一路溜弯溜过去了. 房子基本建好了, 由于是春节期间工人们休息, 所以一楼大门被锁上了. 我跟二哥从一楼阳台爬进去, 到大哥的房子看了看, 还不错, 3个卧室都朝阳, 不过天花板不够高, 担心住着会有点压抑.</p>
+
+<p>又去儿童公园溜弯了, 发现已经完全变样了. 碰到了一位捏泥人的艺人, 周围吸引了一大波人围观. 他会不会是我小时候在儿童公园捏泥人的那位艺人呢? Sign, 时间过得真快.</p>
+
+<p>我老早就知道老妈喜欢看智取威虎山, 回去前就下好了最新的电影. 回去专门陪老妈看了一遍, 结果发现老妈已经不大能跟上电影的节奏了, 有些人物得我提示她才能对上号.那一颏, 真心觉着她老了.</p>
+
+<p>各路亲戚好友又对二哥进行了轰炸, &ldquo;啥时候结婚啊?&rdquo; &ldquo;咋还不结婚, 人家那谁谁的孩子都已经上小学啦&rdquo;. 虽然二哥表面上没什么, 但是感觉他心里压力挺大的, 他笑着说等我工作了就好了, 就可以帮他分流一部分关注了.</p>
+
+<p>哦, 对了, 今年回家发现二哥头上也开始有白头发了.</p>
+
+<p class='post-footer'>original link:<a href='http://johnkeepmoving.com/blog/2015/03/15/guo-nian/'>http://johnkeepmoving.com/blog/2015/03/15/guo-nian/</a><br/>&nbsp;written by <a href='http://johnkeepmoving.com'>Heng Jiang</a>&nbsp;posted at <a href='http://johnkeepmoving.com'>http://johnkeepmoving.com</a></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[利用shadowsocks搭建个人VPN]]></title>
+    <link href="http://johnkeepmoving.com/blog/2015/02/07/li-yong-shadowsocksda-jian-ge-ren-vpn/"/>
+    <updated>2015-02-07T00:23:56+08:00</updated>
+    <id>http://johnkeepmoving.com/blog/2015/02/07/li-yong-shadowsocksda-jian-ge-ren-vpn</id>
+    <content type="html"><![CDATA[<p>之前一直在用123ssh的vpn, 最近发现他们的服务器不太稳定, Linux下还能连上服务器, windows下直接连接不上.</p>
+
+<p>今天在RamNode上买了一个VPS, 利用shadowsocks搭建了个人VPN, 特此记录下来.</p>
+
+<!--more-->
+
+
+<h1>shadowsocks和vpn</h1>
+
+<p>shadowsocks 是一个基于socks5协议的代理服务器.
+利用shadowsocks搭建VPN的原理就是:</p>
+
+<blockquote><ul>
+<li>本地浏览器将http请求发送到本地shadowsocks (sslocal进程会监听本地端口)</li>
+<li>sslocal进程将http请求转发给远端的shadowsocks(sssever)</li>
+<li>ssserver向internet请求该http请求</li>
+<li>请求的数据再依次转发到浏览器</li>
+</ul>
+</blockquote>
+
+<p>翻墙的原理就是: 找一个美国的服务器!可以直接在ramnode上买vps或者AWS上买个ec2都行, 重点该虚拟机访问外国网站不会被qiang.</p>
+
+<h1>详细步骤:</h1>
+
+<ol>
+<li><p>搞定虚拟机.
+一定要国外的服务器, 不然怎么fan..我就是在RamNode上买了个最低配的vps.一年流量500G, 才不到100.是不是超值?</p></li>
+<li><p>安装shadowsocks</p>
+
+<pre><code> apt-get install python-gevent python-pip
+ pip install shadowsocks
+</code></pre></li>
+<li><p>shadowsocks配置说明</p>
+
+<p>shadowsocks的配置很简单, 其配置文件是json格式的, 可选的字段值含义如下:</p>
+
+<pre><code> server          服务器 IP (IPv4/IPv6)，注意这也将是服务端监听的 IP 地址
+ server_port     服务器端口
+ local_port      本地端端口
+ password        用来加密的密码
+ timeout         超时时间（秒）
+ method          加密方法，可选择 "bf-cfb", "aes-256-cfb", "des-cfb", "rc4", 等等。默认是一种不安全的加密，推荐用 "aes-256-cfb"
+</code></pre></li>
+<li><p>配置服务器shadowsocks
+在服务器上的/etc/shadowsocks目录下创建 config.json.填入以下内容:</p>
+
+<pre><code> {
+     "server":"server_ip",
+     "server_port":server_port_num,
+     "password":"用来加密的密码",
+     "method":"aes-256-cfb"
+ }
+</code></pre></li>
+<li><p>启动服务器服务进程.</p>
+
+<pre><code> /usr/local/bin/ssserver -c /etc/shadowsocks/config.json &gt;
+ /etc/shadowsocks/log 2&gt;&amp;1 &amp;
+</code></pre>
+
+<p>为了开机启动, 可以把上面那条命令写到 /etc/rc.local</p></li>
+<li><p>配置本地shadowsocks
+在本地上的/etc/shadowsocks目录下同样创建 config.json, 填入以下内容:</p>
+
+<pre><code> {
+     "server":"server_ip",
+     "server_port":server_port_num,
+     "local_address":"127.0.0.1",
+     "local_port":local_port_num,
+     "password":"用来加密的密码,同上",
+     "passwordtimeout":300,
+     "method":"aes-256-cfb",
+     "fast_open":false,
+     "workers":1
+ }
+</code></pre></li>
+<li><p>启动本地进程</p>
+
+<pre><code> /usr/local/bin/sslocal -c /etc/shadowsocks/config.json &gt; /etc/shadowsocks/log 2&gt;&amp;1 &amp;
+</code></pre>
+
+<p>同样, 为了开机启动, 可以把上面那条命令写到 /etc/rc.local</p></li>
+<li><p>浏览器设置, 启用ssh代理
+我用的chrom浏览器, 安装了拓展SwitchyOmega, 只需要添加一个Profile, 代理协议选socks5, server填127.0.0.1, port填步骤6中的local_port_num</p></li>
+<li><p>done!
+打开Youtube, 发现1080P都是秒开, 瞬间心情大好啊. 哈哈哈~~</p></li>
+</ol>
+
+
+<p>Finish</p>
+
+<p class='post-footer'>original link:<a href='http://johnkeepmoving.com/blog/2015/02/07/li-yong-shadowsocksda-jian-ge-ren-vpn/'>http://johnkeepmoving.com/blog/2015/02/07/li-yong-shadowsocksda-jian-ge-ren-vpn/</a><br/>&nbsp;written by <a href='http://johnkeepmoving.com'>Heng Jiang</a>&nbsp;posted at <a href='http://johnkeepmoving.com'>http://johnkeepmoving.com</a></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[起床困难户]]></title>
+    <link href="http://johnkeepmoving.com/blog/2015/01/24/qi-chuang-kun-nan-hu/"/>
+    <updated>2015-01-24T00:04:40+08:00</updated>
+    <id>http://johnkeepmoving.com/blog/2015/01/24/qi-chuang-kun-nan-hu</id>
+    <content type="html"><![CDATA[<p>当初信誓旦旦地定下每周一篇博客的硬性标准, 结果又不出意外的break the rule了.</p>
+
+<p>最近一直过得浑浑噩噩的, 一天天感觉啥也没干就过来了.感觉整个人没有斗志和干劲儿.要不是今天跟师弟一起给实验室的项目增加了一个新特性, 还真想不起来这几天都干啥了.</p>
+
+<!--more-->
+
+
+<p>最近起床比较困难, 8点15的闹铃已经越发成为了一种形式.总是会睡到9点才行, 还得刷会儿知乎日报和微薄才能勉为其难得起床.到实验室都要将近10点了&hellip;</p>
+
+<p>这周一早跟导师讲了中期的PPT, 导师很负责地指出不足, 于是乎得各种改.但是我打心眼里已经不太想继续做这个方向了.于是乎, 基本好几天都在绞尽脑汁地改PPT. 但其实效率很低, 时常刷个微薄, 看会儿比赛.又想到了一句话,</p>
+
+<blockquote><p>生命很短暂, 不要浪费一分一秒在不开心的事情上</p></blockquote>
+
+
+<p>是不是也可以说, 不要浪费一分一秒在不感兴趣的事上呢? 这好像不太现实.也许调整心态, 尽可能高效地搞定它, 才能有更多的精力做自己真正感兴趣的事.</p>
+
+<p>今天在微薄上听到一首歌, After the War - Kheops. 感觉突然被击中了, 单曲循环了很久. 好久没有听到能让我内心平静下来的歌了, 心情很放松, 有种广阔天地之间自由翱翔的感觉. 想到自己生活状态, 感觉有种没打开的感觉, 没有用心去感受生活中美好的东西, 去度过生命中的每一天. 现在连早起居然也成了一个大问题.</p>
+
+<p>生命很短暂, 要珍惜每一寸光阴, 让每一刻都过得有意义. 多反思多总结, 集中精力在感兴趣的事情, 闲暇时间去体验新鲜事务, 尽可能多地感受生活吧.</p>
+
+<p class='post-footer'>original link:<a href='http://johnkeepmoving.com/blog/2015/01/24/qi-chuang-kun-nan-hu/'>http://johnkeepmoving.com/blog/2015/01/24/qi-chuang-kun-nan-hu/</a><br/>&nbsp;written by <a href='http://johnkeepmoving.com'>Heng Jiang</a>&nbsp;posted at <a href='http://johnkeepmoving.com'>http://johnkeepmoving.com</a></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[新年计划之2015]]></title>
+    <link href="http://johnkeepmoving.com/blog/2015/01/02/xin-nian-ji-hua-zhi-2015/"/>
+    <updated>2015-01-02T21:32:03+08:00</updated>
+    <id>http://johnkeepmoving.com/blog/2015/01/02/xin-nian-ji-hua-zhi-2015</id>
+    <content type="html"><![CDATA[<p>转眼, 2015年到了, 新的一年即将开始, 打算给自己订个新年计划.</p>
+
+<p>最近, 李开复老师关于新年计划的一篇文章传的很火,  <a href="http://blog.sina.com.cn/s/blog_475b3d560102vasj.html">如何设计你的年度计划</a>我看完后, 颇受启发, 按照SMART原则(Specific\Measurable\Attainable\Result-based\Time-based)设计了我的2015计划.</p>
+
+<p> <strong>- 坚持写博客</strong></p>
+
+<p>14年11月利用Github pages + Octopress搭建好了自己的博客, 随后在Godaddy上买了域名.
+担心Godaddy的DNS服务器被污染和访问慢, 开始搞国内免费进行域名解析的DNS Pod.
+后来考虑到github访问慢, 参考<a href="http://blog.devtang.com/blog/2014/06/02/use-gitcafe-to-host-blog/">将博客从GitHub迁移到GitCafe</a>用Gitcafe的Pages服务托管过一段时间的网站.</p>
+
+<p>但是&hellip;&hellip;.我折腾了这么久, 到现在为之也只写了两篇, 其中还有一个init&hellip;
+写博客的好处是显而易见的, 所以, 新年的第一个目标就是坚持写博客.</p>
+
+<p>具体要求: 每周一篇, 可技术, 可随笔, 端正态度!</p>
+
+<p> <strong>- 坚持锻炼身体</strong></p>
+
+<p>我以前还是喜欢运动的, 偶尔打个篮球, 跑个步. 但是最近半年, 由于种(bu)种(ai)原(dong)因(tan), 锻炼的越来越少, 现在看电脑时间一长就脖子酸.</p>
+
+<p>实验室好几个同学都办了健身卡, 就在我们所楼下, 挺方便的, 思考再三, 决定也办一个.
+跟经常健身的同学已经约定好了, 我俩作伴儿, 一周去3到5天, 现在准备早上去, 早起锻炼1个半小时, 冲个澡然后开始一天的工作, 应该挺爽的吧.</p>
+
+<p>具体要求: 每周健身3到5天, 每周拍照记录体型变化, 3个月练出6块腹肌.
+详细健身方法准备另开一篇博客记录.</p>
+
+<p> <strong>- 坚持学英语</strong></p>
+
+<p>英语的重要性也是不言而喻的, 曾经带两个老外去逛故宫, 由于口语不行, 可是费了我老大劲了. 另外,  很多技术的第一手资料都是英文的, 程序员英语好绝对不吃亏啊!</p>
+
+<p>学习方法: twitter关注媒体和名人, 追美剧</p>
+
+<p>具体要求: 追一到两部美剧；闲暇就逛逛Twitter.</p>
+
+<p>目前可以想到就是以上3条, 以后如果有新的计划, 会跟进更新到这篇文章.</p>
+
+<p>计划制定容易, 执行难, 希望自己能一步一个脚印, 踏实的落实这些计划!</p>
+
+<p>Finish</p>
+
+<p class='post-footer'>original link:<a href='http://johnkeepmoving.com/blog/2015/01/02/xin-nian-ji-hua-zhi-2015/'>http://johnkeepmoving.com/blog/2015/01/02/xin-nian-ji-hua-zhi-2015/</a><br/>&nbsp;written by <a href='http://johnkeepmoving.com'>Heng Jiang</a>&nbsp;posted at <a href='http://johnkeepmoving.com'>http://johnkeepmoving.com</a></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ceph 源码安装及部署]]></title>
+    <link href="http://johnkeepmoving.com/blog/2014/11/03/ceph-yuan-ma-an-zhuang-ji-bu-shu/"/>
+    <updated>2014-11-03T20:45:56+08:00</updated>
+    <id>http://johnkeepmoving.com/blog/2014/11/03/ceph-yuan-ma-an-zhuang-ji-bu-shu</id>
+    <content type="html"><![CDATA[<p>Ceph是一个开源的分布式存储的项目, 可以提供 对象存储\文件存储(Posix兼容)\块存储 等服务. OpenStack是目前最流行的开源云计算框架, 而Ceph是OpenStack社区中呼声最高的后端统一存储. 具体请参考 <a href="http://www.ceph.com">Ceph官网</a></p>
+
+<h3>ceph有两种常见的部署方法</h3>
+
+<p>Ceph官网推荐用 Ceph-deploy 进行Ceph集群的部署.</p>
+
+<ul>
+<li>Ceph-deploy的工作方式是: 需要有一个admin-node安装Ceph-deploy, 该admin-node需要能够密码free地ssh访问Ceph node.通过在admin-node上执行Ceph-deploy的简单命令一步一步增量式地构建Ceph存储系统. 这种方式部署简单, 在各个Ceph node上安装的是Ceph的binary包(从包管理系统获得).详情请参考 <a href="http://ceph.com/docs/master/start/">http://ceph.com/docs/master/start/</a></li>
+</ul>
+
+
+<!--more-->
+
+
+<p><em>如果需要改源码的话, 那么不推荐这种部署方式</em>:因为确实可以先在Ceph的各个node上先源码编译安装好, 然后从Admin-node上用Ceph-deploy构建Ceph存储系统, 但是我在实际中尝试这么做时遇到了很多很多的问题, 虽然最后也成功部署, 但远不如第2种方法省事.</p>
+
+<ul>
+<li>源码编译安装, 然后用mkcephfs脚本来初始化Ceph存储系统.
+主要就是 下载源码包 -> 编译安装 -> 编写配置文件,设置分区 -> 执行mkcephfs -> 启动ceph服务.本文重点讲解第二种方法.</li>
+</ul>
+
+
+<p>博主的环境是:
+<em>UnitedStack上的虚拟机: Centos6.5(64位), 8 vCpu, 32G内存, 挂载了/dev/sdb, /dev/sdc, /dev/sdd 三块100G的Volume.</em>
+<em>Ceph环境是: 1个mon, 1个mds, 3个osd, 每个osd的data 和 journal分别写到不同分区</em></p>
+
+<h2>源码安装及部署过程</h2>
+
+<p>1.下载Ceph 源码</p>
+
+<pre><code>    git clone --recursive https://github.com/ceph/ceph.git
+    cd ceph
+    git submodule update
+</code></pre>
+
+<p>2.安装依赖
+    在ceph的根目录下, 有两个文件: deps.deb.txt 和 deps.rpm.txt, 根据你的系统执行执行下面两条命令之一即可:</p>
+
+<pre><code>    sudo yum install `cat deps.rpm.txt`
+</code></pre>
+
+<p>or</p>
+
+<pre><code>    sudo apt-get install `cat deps.deb.txt`
+</code></pre>
+
+<p>3.在Ceph的根目录执行:</p>
+
+<pre><code>    ./autogen.sh
+    ./configure
+    make
+    make install(可选)
+</code></pre>
+
+<p> 由于Ceph make的时候非常慢, 在make的时候可以用 <code>make -j{CPU Core数目}</code>来加快编译</p>
+
+<p>4.把ceph作为系统服务</p>
+
+<pre><code>    cp ceph/src/init-ceph /etc/init.d/ceph
+</code></pre>
+
+<p>5.创建Ceph配置文件 ceph.conf:</p>
+
+<p>Ceph配置文件主要包含以下几个部分:</p>
+
+<p><code>[global]</code>里是全局设置, <code>[mon]</code>里是monitor的一般性设置, <code>[mon.a]</code>里是monitor a的特殊设置,  <code>[osd]</code>里是osd的一般设置, <code>[osd.0]</code>是osd.0的特殊设置, 后面以此类推.</p>
+
+<p>下面是我的ceph.conf, 谨供参考:</p>
+
+<pre><code>    [global]
+    # For version 0.55 and beyond, you must explicitly enable or disable authentication with "auth" entries in [global].
+    auth cluster required = none
+    auth service required = none
+    auth client required = none
+    osd pool default size = 3
+    osd pool default min size = 1
+    osd crush update on start = 0
+    osd_pool_default_pg_num = 2048
+    osd_pool_default_pgp_num = 2048
+    osd_crush_chooseleaf_type = 0
+    ms_use_event = true
+    ms_event_op_threads = 3
+
+    debug_buffer = 0/0
+    debug_optracker = 0/0
+    debug_objclass = 0/0
+    debug_throttle = 0/0
+    debug_timer = 0/0
+    debug_lockdep = 0/0
+    debug_mds_log = 0/0
+    debug_osd = 0/0
+    debug_mds = 0/0
+    perf = True
+    debug_heartbeatmap = 0/0
+    debug_asok = 0/0
+    debug_objectcacher = 0/0
+    debug_rbd = 0/0
+    debug_paxos = 0/0
+    debug_finisher = 0/0
+    debug_client = 0/0
+    debug_mds_balancer = 0/0
+    debug_context = 0/0
+    debug_perfcounter = 0/0
+    debug_auth = 0/0
+    debug_journal = 0/0
+    debug_rados = 0/0
+    debug_crush = 0/0
+    debug_rgw = 0/0
+    mutex_perf_counter = true
+    debug_objecter = 0/0
+    debug_ms = 0/0
+    debug_mds_log_expire = 0/0
+    debug_journaler = 0/0
+    debug_filestore = 0/0
+    debug_keyvaluestore = 0/0
+    debug_mds_migrator = 0/0
+    debug_tp = 0/0
+    debug_monc = 0/0
+    debug_filer = 0/0
+    debug_hadoop = 0/0
+    debug_mds_locker = 0/0
+    debug_mon = 10/10
+
+    mon_client_hunt_interval = 30
+    [osd]
+    osd journal size = 0
+    osd objectstore = filestore
+    osd_op_threads = 3
+    osd_client_message_cap = 91280000
+    osd_client_message_size_cap = 104857600000
+    osd_mon_heartbeat_interval = 30
+    osd_heartbeat_interval = 6
+    osd_heartbeat_min_peers = 10
+    osd_heartbeat_grace = 20
+    #osd_keyvaluedb = rocksdb
+
+    keyvaluestore queue max ops = 500
+    keyvaluestore queue max bytes = 1000 &lt;&lt; 30
+    keyvaluestore header cache size = 409600
+    keyvaluestore op threads = 10
+    keyvaluestore_max_expected_write_size = 4096
+    leveldb_write_buffer_size = 33554432
+    leveldb_cache_size = 536870912
+    leveldb_bloom_size = 0
+    leveldb_max_open_files = 10240
+    leveldb_compression = false
+    leveldb_paranoid = false
+    leveldb_log = /dev/null
+    leveldb_compact_on_mount = false
+
+    rocksdb_write_buffer_size = 33554432
+    rocksdb_cache_size = 536870912
+    rocksdb_bloom_size = 0
+    rocksdb_max_open_files = 10240
+    rocksdb_compression = false
+    rocksdb_paranoid = false
+    rocksdb_log = /dev/null
+    rocksdb_compact_on_mount = false
+
+    filestore_queue_max_ops = 5000
+    filestore_wbthrottle_xfs_bytes_start_flusher = 500000000
+    journal_max_write_entries = 500000
+    filestore_wbthrottle_xfs_indoes_start_flusher = 500
+    filestore_fd_cache_size = 204800
+    filestore_omap_header_cache_size = 204800
+    filestore_fd_cache_random = true
+    filestore_wbthrottle_xfs_inodes_hard_limit = 80000
+    filestore_wbthrottle_xfs_indoes_hard_limit = 500000
+    osd_leveldb_block_size = 65536
+    journal_queue_max_ops = 500000
+    filestore_wbthrottle_xfs_ios_start_flusher = 50000
+    osd_leveldb_bloom_size = 0
+    osd_op_thread_timeout = 60
+    ms_dispatch_throttle_bytes = 104857600000
+    filestore_wbthrottle_xfs_bytes_hard_limit = 500000000
+    osd_leveldb_compression = False
+    osd_leveldb_write_buffer_size = 33554432
+    filestore_op_threads = 4
+    filestore_max_inline_xattrs = 6
+    filestore_wbthrottle_enable = True
+    osd_leveldb_max_open_files = 0
+    journal_queue_max_bytes = 10240000000
+    osd_leveldb_cache_size = 536870912
+    filestore_queue_committing_max_ops = 50000
+    journal_max_write_bytes = 1024000000
+    filestore_queue_max_bytes = 1024000000
+    filestore_wbthrottle_xfs_ios_hard_limit = 500000
+    max_open_files = 224800
+    objecter_inflight_ops = 10240
+    filestore_fiemap = true
+    filestore_max_sync_interval = 5
+    #osd_recovery_max_active=2000,
+    #osd_recovery_max_single_start=300,
+    #osd_recovery_max_chunk=33554432",
+    osd mkfs type = xfs
+    osd_pg_object_context_cache_count = 1024
+    osd_op_num_shards = 5
+    osd_op_num_threads_per_shard = 2
+
+    #osd_scrub_min_interval = 10
+    #osd_scrub_max_interval = 10
+    #osd_deep_scrub_interval = 10
+
+    [mon]
+        mon data = /var/ceph_data/$name 
+
+    [mon.0]
+        host = ceph
+        mon addr = 10.250.11.174:6789
+
+    [osd]
+        osd data = /var/ceph_data/$name
+        host = ceph 
+
+    [osd.0]
+        osd journal = /dev/vdb1
+        devs = /dev/vdb2 
+
+    [osd.1]
+        osd journal = /dev/vdc1
+        devs = /dev/vdc2 
+
+    [osd.2]
+        osd journal = /dev/vdd1
+        devs = /dev/vdd2 
+
+    [mds]
+        host = ceph 
+    [mds.a]
+</code></pre>
+
+<p><em>注意: 上面提到的data相关的路径都是需要手动创建的</em></p>
+
+<p>6.磁盘分区</p>
+
+<p>以/dev/vdb为例, 小容量的将来存OSD的journal, 大容量的将来存OSD的Data</p>
+
+<pre><code>    parted -a optimal -s /dev/vdb mktable gpt
+    parted -a optimal -s /dev/vdb mkpart ceph 0% 20GB
+    parted -a optimal -s /dev/vdb mkpart ceph 20GB 100%
+</code></pre>
+
+<p>7.磁盘挂载</p>
+
+<p>将三块大的分区分别挂载到三个osd的data路径,</p>
+
+<pre><code>    mount /dev/vdb2 /var/ceph_data/osd.0
+    mount /dev/vdc2 /var/ceph_data/osd.1
+    mount /dev/vdd2 /var/ceph_data/osd.2
+</code></pre>
+
+<p>8.mkcephfs</p>
+
+<p>mkcephfs是稍微有点老的工具, 在ceph-0.80及之前的版本中存在与src/目录下, 以后每当ceph配置文件变化时, 都在src/下执行,</p>
+
+<pre><code>    ./mkcephfs -a -c /etc/ceph/ceph.conf -k /etc/ceph/ceph.keyring
+</code></pre>
+
+<p>成功的话就完成了初始化工作</p>
+
+<p>9.启动ceph服务</p>
+
+<pre><code>    /etc/init.d/ceph -c /etc/ceph/ceph.conf -a start
+</code></pre>
+
+<p> 如果报错:</p>
+
+<pre><code>    /etc/init.d/ceph: line 15: /lib/lsb/init-functions: No such file or directory
+</code></pre>
+
+<p>就在mon结点上</p>
+
+<pre><code>    yum install redhat-lsb
+</code></pre>
+
+<p>10.ceph服务启动完成后,</p>
+
+<pre><code>    ./ceph/src/ceph -s
+</code></pre>
+
+<p>如果显示<code>HEALTH_OK</code>, 则表示ceph存储系统成功创建.</p>
+
+<p class='post-footer'>original link:<a href='http://johnkeepmoving.com/blog/2014/11/03/ceph-yuan-ma-an-zhuang-ji-bu-shu/'>http://johnkeepmoving.com/blog/2014/11/03/ceph-yuan-ma-an-zhuang-ji-bu-shu/</a><br/>&nbsp;written by <a href='http://johnkeepmoving.com'>Heng Jiang</a>&nbsp;posted at <a href='http://johnkeepmoving.com'>http://johnkeepmoving.com</a></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[First Post]]></title>
+    <link href="http://johnkeepmoving.com/blog/2014/10/27/first-post/"/>
+    <updated>2014-10-27T23:59:41+08:00</updated>
+    <id>http://johnkeepmoving.com/blog/2014/10/27/first-post</id>
+    <content type="html"><![CDATA[<p>这是用Octopress写的第一篇博客, 目前对格式还不太熟悉.</p>
+
+<p>维护这个博客主要是希望能记录自己的技术历程, 希望能将遇到的技术/问题/解决思路清晰地记录下来, 通过总结加深自己的理解.</p>
+
+<p>If you can&rsquo;t explain it simply you don&rsquo;t understand it well enough.</p>
+
+<p>Finish</p>
+
+<p class='post-footer'>original link:<a href='http://johnkeepmoving.com/blog/2014/10/27/first-post/'>http://johnkeepmoving.com/blog/2014/10/27/first-post/</a><br/>&nbsp;written by <a href='http://johnkeepmoving.com'>Heng Jiang</a>&nbsp;posted at <a href='http://johnkeepmoving.com'>http://johnkeepmoving.com</a></p>
+
+]]></content>
+  </entry>
+  
+</feed>
